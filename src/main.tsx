@@ -1,10 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import "./styles/index.css"
-import App from './App.tsx'
+import App from './components/App.tsx'
+import { ThemeProvider } from './context/ThemeConetxt.tsx'
+import { RolesProvider } from './context/RoleContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+      <ThemeProvider>
+        <RolesProvider>
+          <StrictMode>
+            <App />
+          </StrictMode>
+        </RolesProvider>
+      </ThemeProvider>
+
 )
