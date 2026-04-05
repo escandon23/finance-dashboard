@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from "react"
 import { useFilter } from "../context/FiltersContext"
+import { useTheme } from "../context/ThemeConetxt"
 import { useTransactions } from "../context/TransactionsContext"
 import { useRole } from "../context/RoleContext"
 import AddTransaction from "./AddTransaction"
@@ -17,7 +18,7 @@ const Transactions = () => {
     const [showAddTransaction , setShowAddTransaction] = useState<boolean>(false)
     const [editingId , setEditingId] = useState<string | null>(null)
     const [editData , setEditData] = useState({ category : "", type : "" as "income" | "expense", amount : "" })
-
+    const {theme} = useTheme()
     let results : Transaction[] = [...transactions]
 
     results = results.filter((transaction) => transaction.category.toLowerCase().includes(filters.search.toLowerCase()))
@@ -34,7 +35,10 @@ const Transactions = () => {
 
     const handleDelete = (deleteId : string) => {
        const newTransactions =  transactions.filter(transaction => transaction.id !== deleteId)
+       
        setTransactions(newTransactions)
+
+       localStorage.setItem("transactions" , JSON.stringify(newTransactions))
     }
 
     const handleEditChange = (e : ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {   
@@ -47,10 +51,19 @@ const Transactions = () => {
         setEditData({category: transaction.category,type: transaction.type,amount: transaction.amount.toString()})
     }
     const handleSave = (id:string) => {
+
         const updatedTransactions = transactions.map((transaction) => transaction.id === id ? {...transaction ,
              category : editData.category , type:editData.type as "income" | "expense" , amount:Number(editData.amount)} : transaction)
-             setTransactions(updatedTransactions)
+             
+             
              setEditingId(null)
+
+      setTransactions( updatedTransactions);
+
+      localStorage.setItem("transactions",JSON.stringify(updatedTransactions));
+
+
+    
     }
     const handleCancel = () => {
         setEditingId(null)
@@ -63,9 +76,27 @@ const Transactions = () => {
           const TransactionSortChange = (e:SelectChangeEvent) => {
             setFilters({...filters , sortBy : e.target.value as SortType})
         }
+
+    const exportToCSV = () => {
+        const headers = ["Date", "Category", "Type", "Amount"]
+
+        const rows = transactions.map(t => [t.date,t.category,t.type,t.amount])
+
+        const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\n")
+
+        const blob = new Blob([csvContent], { type: "text/csv" })
+        const url = URL.createObjectURL(blob)
+
+        const link = document.createElement("a")
+        link.href = url
+        link.download = "transactions.csv"
+        link.click()
+
+        URL.revokeObjectURL(url)
+    }
     
     return(
-        <div className="p-2 flex flex-col gap-5">
+        <div className={`p-2 flex flex-col gap-5 ${theme==="dark" ? "bg-[#111827] color-white" : "bg-white"}`}>
             <h2 className="text-xl mb-2">Transactions</h2>   
 
             {showAddTransaction ?  <AddTransaction showAddTransaction={showAddTransaction} setShowAddTransaction={setShowAddTransaction}/> : ""}
@@ -94,7 +125,7 @@ const Transactions = () => {
                 </div>
                
                 {role === "admin" ? (<button className="bg-blue-500 text-white text-sm md:text-md px-4 py-2 rounded-lg" onClick={() => setShowAddTransaction(true)} >Add</button>) :
-                <button className="bg-blue-500 text-white text-sm md:text-md px-4 py-2 rounded-lg">Export</button>} 
+                <button className="bg-blue-500 text-white text-sm md:text-md px-4 py-2 rounded-lg" onClick={exportToCSV} >Export</button>} 
               
             </div>
            
@@ -109,32 +140,39 @@ const Transactions = () => {
                     </tr>
                 </thead>
                 <tbody>
-                        {results.map((transaction , index) => (
-                            <tr key={index} className="group">
-                                <td className="p-2 pl-0 pr-4 text-left text-sm md:text-md  border-b border-gray-300">{transaction.date}</td>
-                                <td className="p-2 pl-0 pr-4 text-left text-sm md:text-md border-b border-gray-300">{editingId === transaction.id ? <input type="text" name="category" value={editData.category}  onChange={handleEditChange}/> : transaction.category}</td>
-                                <td className="p-2 pl-0 pr-4 pb- pr-5 text-left  text-sm md:text-md border-b border-gray-300 ">{editingId === transaction.id ? (
-                                     <select name="type" value={editData.type} onChange={handleEditChange}> 
-                                        <option value="" disabled>  Select type </option>
-                                        <option value="income">Income</option>
-                                        <option value="expense">Expense</option>
-                                    </select>
-                                )
-                                   : transaction.type}
-                                </td>
-                                <td className="p-2 pl-0 pr-4 text-sm md:text-md text-left border-b border-gray-300">{editingId === transaction.id ? <input type="text" name="amount" value={editData.amount}  onChange={handleEditChange}/> : "$"+transaction.amount.toLocaleString()}</td>
-                                {role == "admin" && ( 
-                                <td className="w-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
-                                    {editingId === transaction.id ? (
-                                        <><button onClick={() => handleSave(transaction.id)} className="text-green-500"><Save/></button>
-                                            <button onClick={handleCancel} className="text-gray-500 ml-2"><X/></button></>) : (
-                                        <><button onClick={() => handleEdit(transaction)} className=" text-blue-500"><Pencil/></button>
-                                            <button onClick={() => handleDelete(transaction.id)} className=" text-red-500"><Trash2/></button>
-                                        </>)}
-                                </td> )
-                                }
-                            </tr>
-                        ))}
+                    {results.map((transaction , index) => (
+                    <tr key={index} className="group">
+                        <td className="p-2 pl-0  text-left text-sm md:text-md  border-b border-gray-300">{transaction.date.slice(2)}</td>
+                        <td className="text-left text-sm md:text-md border-b border-gray-300">
+                        {editingId === transaction.id ? <input className="text-sm w-[70px] md:w-[100px]" type="text" name="category" value={editData.category}  onChange={handleEditChange}/>
+                        : transaction.category}</td>
+                        <td className="text-left text-sm md:text-md border-b border-gray-300 ">{editingId === transaction.id ? (
+                            <select name="type" value={editData.type} onChange={handleEditChange}> 
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        )
+                            : transaction.type.charAt(0).toUpperCase()+transaction.type.slice(1)}
+                        </td>
+                        <td className="text-sm md:text-md text-left border-b border-gray-300">
+                            {editingId === transaction.id ? <input className="w-[50px]" type="text" name="amount" value={editData.amount}  onChange={handleEditChange}/> 
+                            : "$"+transaction.amount.toLocaleString()}</td>
+                        {role == "admin" && ( 
+                        <td className="w-[50px] md:w-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
+                            {editingId === transaction.id ? (
+                                <div>
+                                    <button onClick={() => handleSave(transaction.id)} className="text-green-500"><Save className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                    <button onClick={handleCancel} className="text-gray-500 ml-2"><X className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                </div>) : (
+                                <div>
+                                    <button onClick={() => handleEdit(transaction)} className=" text-blue-500"><Pencil className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                    <button onClick={() => handleDelete(transaction.id)} className=" text-red-500 ml-2"><Trash2 className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                </div>
+                            )}
+                        </td> )
+                        }
+                    </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

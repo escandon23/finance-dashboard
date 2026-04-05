@@ -16,8 +16,11 @@ export const TransactionsProvider : FC<TransactionsProviderProps> = ({children})
     const [transactions, setTransactions] = useState<Transaction[]>([])
 
     useEffect(() => {
+
         const fetchTransactions = async () => {
+
             const stored = localStorage.getItem("transactions");
+            
             if (stored) {
                 setTransactions(JSON.parse(stored));
             }else{
@@ -26,6 +29,7 @@ export const TransactionsProvider : FC<TransactionsProviderProps> = ({children})
                     const data: Transaction[] = await res.json();
 
                     setTransactions(data);
+
                     localStorage.setItem("transactions", JSON.stringify(data))
                 }catch (error) {
                     throw new Error(`Error fetching transactions: ${error}`)

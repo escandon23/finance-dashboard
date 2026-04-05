@@ -1,6 +1,7 @@
 import { useState , type FC  } from "react";
 import { type Transaction } from "../types/types";
 import { useTransactions } from "../context/TransactionsContext";
+import { useTheme } from "../context/ThemeConetxt";
 
 interface AddTransactionProps {
     showAddTransaction : boolean,
@@ -13,6 +14,7 @@ const AddTransaction : FC<AddTransactionProps> = ({showAddTransaction , setShowA
 
     const {transactions , setTransactions} = useTransactions()
     const [formData , setFormData] = useState({category : "",type : "",amount : ""})
+    const {theme} = useTheme()
 
     const formattedDate = new Date().toISOString().slice(0, 10);
 
@@ -21,8 +23,9 @@ const AddTransaction : FC<AddTransactionProps> = ({showAddTransaction , setShowA
     }
 
 
-    const handleSubmit = async (event : React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit =  (event : React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
+
         const randomId = Math.random()
 
         const newTransaction : Transaction = {
@@ -33,34 +36,18 @@ const AddTransaction : FC<AddTransactionProps> = ({showAddTransaction , setShowA
             amount : Number(formData.amount)
      }
 
-     setTransactions([...transactions , newTransaction])
+     const updatedTransactions = [...transactions , newTransaction]
+
+     setTransactions(updatedTransactions)
+
      setFormData({category : "" , type:"" , amount:""})
 
-       try {
 
-        const res = await fetch(
-        "https://69d0e79a90cd06523d5d9ea4.mockapi.io/api/transactions/transactions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newTransaction),
-        }
-      );
+      localStorage.setItem("transactions",JSON.stringify(updatedTransactions));
 
-      if (!res.ok) throw new Error("Failed to save transaction to API");
 
-      const savedTransaction = await res.json();
-
-      setTransactions([...transactions, savedTransaction]);
-
-      localStorage.setItem("transactions",JSON.stringify(transactions));
-
-      setFormData({ category: "", type: "", amount: "" });
-
-    } catch (error) {
-      console.error("Error saving transaction:", error);
     }
-  };
+
 
 
 
@@ -68,7 +55,7 @@ const AddTransaction : FC<AddTransactionProps> = ({showAddTransaction , setShowA
    
    return (
   <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-    <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
+    <div className={`rounded-xl shadow-lg p-8 w-full max-w-md relative ${theme === "dark" ? "bg-[#111827]" : "bg-white"}`}>
       
       {/* Close button */}
       <button onClick={() => setShowAddTransaction(false)}

@@ -19,11 +19,14 @@ const RoleSwitch: FC<RoleSwitchProps> = ({ role, onChange }) => {
       <Select
         value={role}
         onChange={onChange}
-        sx={{backgroundColor: theme === "dark" ? "black" : "white", color: theme === "dark" ? "white" : "black",
+         MenuProps={{
+            PaperProps: { sx: {backgroundColor: theme === "dark" ? "#111827" : "white",color: theme === "dark" ? "white" : "black"}}
+          }}
+        sx={{backgroundColor: theme === "dark" ? "#111827" : "white", color: theme === "dark" ? "white" : "black" ,  transition: "all 0.9s ease",
             "& .MuiOutlinedInput-notchedOutline": {
             borderColor: theme === "dark" ? "none" : "white"
           },"& .MuiSelect-icon": {color: theme === "dark" ? "white" : "black"}}}>
-          <MenuItem value="user">User</MenuItem>
+          <MenuItem sx={{backgroundColor: theme === "dark" ? "#111827" : "white", color: theme === "dark" ? "white" : "black"}} value="user">User</MenuItem>
           <MenuItem value="admin">Admin</MenuItem>
           </Select>
         </FormControl>
