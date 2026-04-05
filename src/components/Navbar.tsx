@@ -4,12 +4,17 @@ import { motion} from "framer-motion";
 import ThemeSwitch from "./ui/ThemeSwitch";
 import RoleSwitch from "./ui/RoleSwitch";
 import {type SelectChangeEvent } from "@mui/material/Select";
+import { useTransactions } from "../context/TransactionsContext";
+
+
 
 
 const Navbar = () =>  {
        
     const {theme ,setTheme} = useTheme()
     const {role , setRole} = useRole()
+
+    const {transactions} = useTransactions()
 
     const handleChange = (event: SelectChangeEvent) => {
         setRole(event.target.value as "user" | "admin");
@@ -18,6 +23,8 @@ const Navbar = () =>  {
     const toggleTheme = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
        setTheme(checked ? "dark" : "light");
     };
+
+
 
     return(
         <motion.div className={`flex justify-between items-center sticky inset-0 shadow-md p-5 ${theme == "light" ? "bg-white text-black" : "bg-black text-white"} `}

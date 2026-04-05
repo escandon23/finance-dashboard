@@ -16,7 +16,7 @@ export interface Filters {
 type TransactionType = "income" | "expense";
 
 export interface Transaction {
-  id: number;
+  id: string;
   date: string; 
   category: string;
   type: TransactionType;
