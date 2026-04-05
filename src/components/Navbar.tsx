@@ -4,7 +4,6 @@ import { motion} from "framer-motion";
 import ThemeSwitch from "./ui/ThemeSwitch";
 import RoleSwitch from "./ui/RoleSwitch";
 import {type SelectChangeEvent } from "@mui/material/Select";
-import { useTransactions } from "../context/TransactionsContext";
 
 
 
@@ -14,7 +13,6 @@ const Navbar = () =>  {
     const {theme ,setTheme} = useTheme()
     const {role , setRole} = useRole()
 
-    const {transactions} = useTransactions()
 
     const handleChange = (event: SelectChangeEvent) => {
         setRole(event.target.value as "user" | "admin");

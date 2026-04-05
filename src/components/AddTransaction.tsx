@@ -51,8 +51,8 @@ const AddTransaction : FC<AddTransactionProps> = ({showAddTransaction , setShowA
 
 
 
-    
-   
+if (!showAddTransaction) return null;   
+
    return (
   <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
     <div className={`rounded-xl shadow-lg p-8 w-full max-w-md relative ${theme === "dark" ? "bg-[#111827]" : "bg-white"}`}>
