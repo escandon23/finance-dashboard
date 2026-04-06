@@ -226,7 +226,7 @@ const Transactions = () => {
             <tr key={index} onClick={() => initiateEdit(transaction)}>
 
                 {/* Transaction Date */}
-              <td className="p-2 pl-0 text-left text-sm md:text-md border-b border-gray-500">
+              <td className="p-2 pl-0 text-left text-gray-500 text-sm md:text-md border-b border-gray-500">
                 {transaction.date.slice(2)}
               </td>
 
@@ -250,7 +250,7 @@ const Transactions = () => {
               </td>
                 
                 {/* Transaction Type and Select Transaction Type */}
-              <td className="text-left text-sm md:text-md border-b border-gray-500">
+              <td className={`${transaction.type == "income" ? "text-green-500" : "text-red-500"} text-left text-sm md:text-md border-b border-gray-500`}>
                 {editingId === transaction.id ? (
                   <select
                     className={`${
@@ -270,7 +270,7 @@ const Transactions = () => {
               </td>
 
               {/* Transacaction Amount and Input Transaction Amount */}
-              <td className="text-sm md:text-md text-left border-b border-gray-500">
+              <td className={`${transaction.type == "income" ? "text-green-500" : "text-red-500"} text-sm md:text-md text-left border-b border-gray-500`}>
                 {editingId === transaction.id ? (
                   <input
                     className="w-[50px] rounded-md border border-gray-300 px-2 py-1"
