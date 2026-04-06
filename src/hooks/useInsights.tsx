@@ -1,11 +1,16 @@
 import { useTransactions } from "../context/TransactionsContext";
+import { type Transaction } from "../types/types";
 
 export const useInsights = () => {
   const { transactions } = useTransactions();
 
-  const expenses = transactions.filter(t => t.type === "expense");
+  const expenses = transactions.filter(transaction => transaction.type === "expense");
 
-  const largestExpense = expenses.reduce( (max, transaction) => (transaction.amount > max.amount ? transaction : max), expenses[0] || { amount: 0 });
+  // Checks for the largest expense , and if the largest expense is absent retun an object with type -Transaction
+
+  const largestExpense: Transaction = expenses.length > 0
+    ? expenses.reduce((max, transaction) => (transaction.amount > max.amount ? transaction : max))
+    : { id: "", date: "", category: "N/A", type: "expense", amount: 0 };
 
   const categoryTotals: Record<string, number> = {};
 

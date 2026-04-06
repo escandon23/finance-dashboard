@@ -1,20 +1,31 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useTransactions } from "../context/TransactionsContext";
 import { useTheme } from "../context/ThemeConetxt";
+import { motion } from "framer-motion";
+
+// Component to display a line chart showing monthly balance trends
 const BalanceChart = () => {
+  // Access transactions and theme from context
   const { transactions } = useTransactions();
   const { theme } = useTheme();
 
+  // Array of month abbreviations for x-axis labels
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+  // Calculate balance (income - expense) for each month
   const seriesData = months.map((_, i) => {
-    const monthTx = transactions.filter(t => new Date(t.date).getMonth() === i);
-    const income = monthTx.filter(t => t.type === "income").reduce((acc, t) => acc + t.amount, 0);
+    // Filter transactions for the current month
+    const monthTx = transactions.filter(transaction => new Date(transaction.date).getMonth() === i);
+
+    // Calculate total income for the month
+    const income = monthTx.filter(transaction => transaction.type === "income").reduce((acc, transaction) => acc + transaction.amount, 0);
+    // Calculate total expenses for the month
     const expense = monthTx.filter(t => t.type === "expense").reduce((acc, t) => acc + t.amount, 0);
+    // Return net balance
     return income - expense;
   });
 
-  // Define theme-based colors
+  // Define theme-based colors for the chart
   const colors = theme === "dark"
     ? {
         line: "#60A5FA", // Tailwind blue-400
@@ -30,11 +41,20 @@ const BalanceChart = () => {
       };
 
   return (
-    <div className={`p-4 rounded-lg shadow-md`} style={{ backgroundColor: colors.background }}>
+    // Animated container with theme-based background
+    <motion.div className={`p-4 shadow-md ${theme == "dark" ? "bg-gray-900" : "bg-white"}`} 
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8 }} 
+    >
+      {/* // Chart title with theme-based color */}
       <h2 className={`text-lg font-semibold mb-4`} style={{ color: colors.axis }}>
+        
         Balance Trend
       </h2>
 
+      {/* Line chart component from MUI */}
       <LineChart
         series={[{ data: seriesData, color: colors.line }]}
         xAxis={[{ 
@@ -42,6 +62,7 @@ const BalanceChart = () => {
           scaleType: "band",
         }]}
         sx={{
+          // Custom styles for axis labels and lines
           '& .MuiChartsAxis-bottom .MuiChartsAxis-tickLabel': {
             fill: colors.axis,
           },
@@ -54,6 +75,7 @@ const BalanceChart = () => {
           '& .MuiChartsAxis-left line': {
             stroke: colors.axis,
           },
+          // Custom styles for grid lines
           '& .MuiChartsGrid-vertical line': {
             stroke: colors.grid,
           },
@@ -63,7 +85,7 @@ const BalanceChart = () => {
         }}
         height={300}
       />
-    </div>
+    </motion.div>
   );
 };
 

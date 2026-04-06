@@ -1,73 +1,162 @@
-# React + TypeScript + Vite
+# Finance Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and interactive finance dashboard built to help users track, explore, and understand their financial activity.
 
-Currently, two official plugins are available:
+This project was developed as part of a Frontend Developer Internship assignment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+[View Live Demo](https://finance-dashboard-7a6t.vercel.app/)
 
-## Expanding the ESLint configuration
+## 📁 GitHub Repository
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+[GitHub Repo](https://github.com/escandon23/finance-dashboard.git)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📋 Overview
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+This dashboard allows users to:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- View financial summaries (balance, income, expenses)
+- Explore and manage transactions
+- Analyze spending patterns through charts
+- Gain insights from financial data
+- Experience role-based UI behavior (Admin vs Viewer)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The focus of this project is on **UI design, component structure, and frontend state management**, not backend integration.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🧠 Approach
+
+I approached this project by focusing on:
+
+- **Clarity over complexity**
+- **Reusable components**
+- **Simple but effective state management**
+- **Good user experience across devices**
+
+The application uses mock data and simulates real-world dashboard behavior while keeping the implementation lightweight.
+
+---
+
+## 🏗️ Features
+
+### 📊 Dashboard Overview
+- Summary cards:
+  - Total Balance
+  - Total Income
+  - Total Expenses
+- Time-based visualization (Balance trend)
+- Category-based visualization (Spending breakdown)
+
+### 📄 Transactions
+- View all transactions with:
+  - Date
+  - Amount
+  - Category
+  - Type (Income/Expense)
+- Features:
+  - Search functionality
+  - Filtering (by type/category)
+  - Sorting
+  - Add, edit, delete (Admin only)
+  - Export to CSV
+
+### 🔐 Role-Based UI (Simulated)
+- **Viewer**
+  - Can only view transactions
+- **Admin**
+  - Can add, edit, and delete transactions
+
+Role switching is handled via a simple UI toggle.
+
+### 📈 Insights
+- Largest expense
+- Highest spending category
+- Monthly comparison
+- Basic financial observations based on data
+
+### 🌙 Additional Features
+- Dark/Light theme toggle
+- Responsive design
+- Local storage persistence
+- Smooth animations with Framer Motion
+
+---
+
+## 🧩 State Management
+
+State is managed using:
+
+- React Context API
+- Handles:
+  - Transactions data
+  - Filters (search, type, sort)
+  - User role
+  - Theme preference
+
+---
+
+## 🎨 UI/UX Highlights
+
+- Responsive design (mobile + desktop)
+- Clean and minimal layout
+- Empty state handling
+- Smooth interactions and animations
+
+---
+
+## ⚙️ Tech Stack
+
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **MUI X Charts** - Chart components
+- **Lucide React** - Icons
+- **React Context** - State management
+
+---
+
+
+## 🛠️ Setup Instructions
+
+1. **Clone the repository:**
+   git clone https://github.com/escandon23/finance-dashboard.git
+   
+
+2. **Navigate into the project:**
+   cd finance-dashboard
+
+3. **Install dependencies:**
+   npm install
+
+4. **Run the development server:**
+   npm run dev
+
+5. **Open your browser** and visit `http://localhost:5173`
+
+---
+
+## 📸 Screenshots
+
+### Dashboard Overview
+![Dashboard](./screenshots/dashboard.png)
+
+### Transactions Management
+![Transactions](./screenshots/transactions.png)
+
+### Dark Mode
+![Dark Mode](./screenshots/dark-mode.png)
+
+---
+
+## Acknowledgements
+
+Thanks to the Zorvyn FinTech team for this opportunity.
+
+---
+
