@@ -143,12 +143,12 @@ State is managed using:
 ## 📸 Screenshots
 
 ### Dashboard Overview
-![Dashboard](/dashboard-light.png)
+![Dashboard](./public/dashboard-light.png)
 
 
 
 ### Dark Mode
-![Dark Mode](/dashboard-dark-mode.png)
+![Dark Mode](./public/dashboard-dark.png)
 
 ---
 
