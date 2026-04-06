@@ -1,6 +1,8 @@
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
+// Custom themed toggle switch for dark/light mode.
+// Extends MUI Switch with custom sizing, thumb icons, and theme-aware colors.
 const ThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,

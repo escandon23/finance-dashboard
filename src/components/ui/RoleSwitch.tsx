@@ -11,9 +11,10 @@ interface RoleSwitchProps {
 }
 
 const RoleSwitch: FC<RoleSwitchProps> = ({ role, onChange }) => {
-    const {theme} = useTheme()
+  const { theme } = useTheme();
 
   return (
+    //  Outer wrapper applies theme-specific container styling.
       <Box className={` ${theme === "dark" ? "border-green-500 text-white border-white-500" : "b-green-500 text-black"}`}>
         <FormControl fullWidth>
       <Select

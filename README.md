@@ -76,7 +76,6 @@ Role switching is handled via a simple UI toggle.
 - Largest expense
 - Highest spending category
 - Monthly comparison
-- Basic financial observations based on data
 
 ### 🌙 Additional Features
 - Dark/Light theme toggle
@@ -144,13 +143,12 @@ State is managed using:
 ## 📸 Screenshots
 
 ### Dashboard Overview
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](/dashboard-light.png)
 
-### Transactions Management
-![Transactions](./screenshots/transactions.png)
+
 
 ### Dark Mode
-![Dark Mode](./screenshots/dark-mode.png)
+![Dark Mode](/dashboard-dark-mode.png)
 
 ---
 

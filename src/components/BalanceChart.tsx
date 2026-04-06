@@ -20,7 +20,7 @@ const BalanceChart = () => {
     // Calculate total income for the month
     const income = monthTx.filter(transaction => transaction.type === "income").reduce((acc, transaction) => acc + transaction.amount, 0);
     // Calculate total expenses for the month
-    const expense = monthTx.filter(t => t.type === "expense").reduce((acc, t) => acc + t.amount, 0);
+    const expense = monthTx.filter(transaction => transaction.type === "expense").reduce((acc, transaction) => acc + transaction.amount, 0);
     // Return net balance
     return income - expense;
   });
@@ -31,13 +31,13 @@ const BalanceChart = () => {
         line: "#60A5FA", // Tailwind blue-400
         grid: "#374151", // Tailwind gray-700
         background: "#111827", // Tailwind gray-800
-        axis: "#D1D5DB", // Tailwind gray-300
+        axis: "#D1D5DB" // Tailwind gray-300
       }
     : {
         line: "#3B82F6", // Tailwind blue-500
         grid: "#E5E7EB", // Tailwind gray-200
         background: "#FFFFFF",
-        axis: "#374151", // Tailwind gray-700
+        axis: "#374151" // Tailwind gray-700
       };
 
   return (

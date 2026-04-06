@@ -11,10 +11,8 @@ createRoot(document.getElementById('root')!).render(
         <RolesProvider>
           <TransactionsProvider>
             <FiltersProvider>
-
-            <App />
-                </FiltersProvider>
-
+              <App />
+            </FiltersProvider>
           </TransactionsProvider>
         </RolesProvider>
       </ThemeProvider>

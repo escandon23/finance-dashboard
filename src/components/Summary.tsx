@@ -5,17 +5,21 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Summary = () => {
+  // Fetch transaction data and theme from app context.
   const { transactions } = useTransactions();
   const { theme } = useTheme();
   const [visible, setVisible] = useState(true);
 
+  // Separate income and expense transactions.
   const income = transactions.filter(t => t.type === "income");
   const expense = transactions.filter(t => t.type === "expense");
 
+  // Calculate totals for each category.
   const totalExpense = expense.reduce((sum, t) => sum + t.amount, 0);
   const totalIncome = income.reduce((sum, t) => sum + t.amount, 0);
   const totalBalance = totalIncome - totalExpense;
 
+  // Format numerical values or hide them when visibility is toggled off.
   const format = (value: number) =>
     visible ? `$${value.toLocaleString()}` : "••••••";
 
