@@ -22,7 +22,7 @@ const RoleSwitch: FC<RoleSwitchProps> = ({ role, onChange }) => {
          MenuProps={{
             PaperProps: { sx: {backgroundColor: theme === "dark" ? "#111827" : "white",color: theme === "dark" ? "white" : "black"}}
           }}
-        sx={{backgroundColor: theme === "dark" ? "#111827" : "white", color: theme === "dark" ? "white" : "black" ,  transition: "all 0.9s ease",
+        sx={{backgroundColor: theme === "dark" ? "#111827" : "white", color: theme === "dark" ? "white" : "black",
             "& .MuiOutlinedInput-notchedOutline": {
             borderColor: theme === "dark" ? "none" : "white"
           },"& .MuiSelect-icon": {color: theme === "dark" ? "white" : "black"}}}>

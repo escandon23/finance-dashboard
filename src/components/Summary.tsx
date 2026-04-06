@@ -23,7 +23,7 @@ const Summary = () => {
 
 
   return (
-    <div className={`p-4  shadow-md transition-colors duration-800 ${ isDark ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
+    <div className={`p-4  shadow-md ${ isDark ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold"> Summary </h2>
 
@@ -41,7 +41,7 @@ const Summary = () => {
             className={`p-4 rounded-xl shadow transition ${isDark? "bg-blue-600 text-white": "bg-blue-100 text-blue-900"}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0 }}
+            transition={{ delay : 0 }}
         >
           <p className="text-sm opacity-80">Balance</p>
           <h1 className="text-xl font-bold">{format(totalBalance)}</h1>

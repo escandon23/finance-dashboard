@@ -8,7 +8,7 @@ import { type FilterType, type SortType, type Transaction } from "../types/types
 import TransactionTypeSwitch from "./ui/TransactionTypeSwitch"
 import TransactionSortSwitch from "./ui/TransactionSortSwitch"
 import type { SelectChangeEvent } from "@mui/material"
-import { Save, Pencil, Trash2, X } from "lucide-react";
+import { Save, X, Pencil, Trash2 } from "lucide-react";
 
 const Transactions = () => {
     
@@ -16,6 +16,8 @@ const Transactions = () => {
     const {role} = useRole()
     const {transactions , setTransactions} = useTransactions()
     const [showAddTransaction , setShowAddTransaction] = useState<boolean>(false)
+    const [editTransactionId, setEditTransactionId ] = useState<string | null>(null)
+    const [saveTransactionId , setSaveTransactionId] = useState<string | null>(null)
     const [editingId , setEditingId] = useState<string | null>(null)
     const [editData , setEditData] = useState({ category : "", type : "" as "income" | "expense", amount : "" })
     const {theme} = useTheme()
@@ -33,12 +35,39 @@ const Transactions = () => {
         results = [...results].sort((a , b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     }
 
+
+    const initiateEdit = (transaction : Transaction) => {
+        if(role=="admin"){
+            setEditTransactionId(transaction.id)
+        }else{
+            return null
+        }
+    }
+    const handleEdit = (transaction : Transaction ) => {
+        setEditTransactionId(null)
+        setSaveTransactionId(transaction.id)
+        setEditingId(transaction.id)
+        setEditData({category: transaction.category,type: transaction.type,amount: transaction.amount.toString()})
+    }
+    const handleSave = (id:string) => {
+        setSaveTransactionId(null)
+        setEditTransactionId(null)
+
+        const updatedTransactions = transactions.map((transaction) => transaction.id === id ? {...transaction ,
+        category : editData.category , type:editData.type as "income" | "expense" , amount:Number(editData.amount)} : transaction)
+        setEditingId(null)
+        setTransactions( updatedTransactions);
+        localStorage.setItem("transactions",JSON.stringify(updatedTransactions));
+    }
     const handleDelete = (deleteId : string) => {
        const newTransactions =  transactions.filter(transaction => transaction.id !== deleteId)
-       
        setTransactions(newTransactions)
-
        localStorage.setItem("transactions" , JSON.stringify(newTransactions))
+    }
+    const handleCancel = () => {
+        setSaveTransactionId(null)
+        setEditTransactionId(null)
+        setEditingId(null)
     }
 
     const handleEditChange = (e : ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {   
@@ -46,36 +75,13 @@ const Transactions = () => {
         setEditData({...editData,[name]: value})
    }
 
-    const handleEdit = (transaction : Transaction ) => {
-        setEditingId(transaction.id)
-        setEditData({category: transaction.category,type: transaction.type,amount: transaction.amount.toString()})
+ 
+    const TransactionTypeChange = (e:SelectChangeEvent) => {
+        setFilters({...filters , type : e.target.value as FilterType})
     }
-    const handleSave = (id:string) => {
-
-        const updatedTransactions = transactions.map((transaction) => transaction.id === id ? {...transaction ,
-             category : editData.category , type:editData.type as "income" | "expense" , amount:Number(editData.amount)} : transaction)
-             
-             
-             setEditingId(null)
-
-      setTransactions( updatedTransactions);
-
-      localStorage.setItem("transactions",JSON.stringify(updatedTransactions));
-
-
-    
+    const TransactionSortChange = (e:SelectChangeEvent) => {
+        setFilters({...filters , sortBy : e.target.value as SortType})
     }
-    const handleCancel = () => {
-        setEditingId(null)
-    }
-
-     
-        const TransactionTypeChange = (e:SelectChangeEvent) => {
-            setFilters({...filters , type : e.target.value as FilterType})
-        }
-          const TransactionSortChange = (e:SelectChangeEvent) => {
-            setFilters({...filters , sortBy : e.target.value as SortType})
-        }
 
     const exportToCSV = () => {
         const headers = ["Date", "Category", "Type", "Amount"]
@@ -96,7 +102,7 @@ const Transactions = () => {
     }
     
     return(
-        <div className={`p-2 flex flex-col gap-5 ${theme==="dark" ? "bg-[#111827] color-white" : "bg-white"}`}>
+        <div className={`p-2 flex flex-col gap-5 ${theme==="dark" ? "bg-[#111827] text-white" : "bg-white"}`}>
             <h2 className="text-xl mb-2">Transactions</h2>   
 
             {showAddTransaction ?  <AddTransaction showAddTransaction={showAddTransaction} setShowAddTransaction={setShowAddTransaction}/> : ""}
@@ -141,7 +147,7 @@ const Transactions = () => {
                 </thead>
                 <tbody>
                     {results.map((transaction , index) => (
-                    <tr key={index} className="group">
+                    <tr key={index} onClick={()=>initiateEdit(transaction)} >
                         <td className="p-2 pl-0  text-left text-sm md:text-md  border-b border-gray-300">{transaction.date.slice(2)}</td>
                         <td className="text-left text-sm md:text-md border-b border-gray-300">
                         {editingId === transaction.id ? <input className="text-sm w-[70px] md:w-[100px]" type="text" name="category" value={editData.category}  onChange={handleEditChange}/>
@@ -157,20 +163,21 @@ const Transactions = () => {
                         <td className="text-sm md:text-md text-left border-b border-gray-300">
                             {editingId === transaction.id ? <input className="w-[50px]" type="text" name="amount" value={editData.amount}  onChange={handleEditChange}/> 
                             : "$"+transaction.amount.toLocaleString()}</td>
-                        {role == "admin" && ( 
-                        <td className="w-[50px] md:w-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
-                            {editingId === transaction.id ? (
+                        <td className="w-[50px] md:w-[70px] transition-opacity duration-200 ">
+                            {editTransactionId === transaction.id ? (
                                 <div>
-                                    <button onClick={() => handleSave(transaction.id)} className="text-green-500"><Save className="w-4 h-4 md:w-6 md:h-6" /></button>
-                                    <button onClick={handleCancel} className="text-gray-500 ml-2"><X className="w-4 h-4 md:w-6 md:h-6" /></button>
-                                </div>) : (
-                                <div>
-                                    <button onClick={() => handleEdit(transaction)} className=" text-blue-500"><Pencil className="w-4 h-4 md:w-6 md:h-6" /></button>
-                                    <button onClick={() => handleDelete(transaction.id)} className=" text-red-500 ml-2"><Trash2 className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleEdit(transaction) }} className="text-blue-500"><Pencil className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(transaction.id) }} className="text-red-500 ml-2"><Trash2 className="w-4 h-4 md:w-6 md:h-6" /></button>
                                 </div>
-                            )}
-                        </td> )
-                        }
+                                
+                            ) : saveTransactionId === transaction.id ? (
+                                  <div>
+                                    <button onClick={(e) => { e.stopPropagation(); handleSave(transaction.id) }} className="text-green-500"><Save className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleCancel() }} className="text-gray-500 ml-2"><X className="w-4 h-4 md:w-6 md:h-6" /></button>
+                                </div>
+                            ): null}
+                            
+                        </td>           
                     </tr>
                     ))}
                 </tbody>

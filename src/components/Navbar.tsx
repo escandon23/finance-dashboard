@@ -25,7 +25,7 @@ const Navbar = () =>  {
 
 
     return(
-        <motion.div className={`flex justify-between transition-colors duration-800 items-center sticky inset-0 z-10 shadow-md p-5 ${theme == "light" ? "bg-white text-black" : "bg-gray-900 text-white"} `}
+        <motion.div className={`flex justify-between items-center sticky inset-0 z-10 shadow-md p-5 ${theme == "light" ? "bg-white text-black" : "bg-gray-900 text-white"} `}
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
